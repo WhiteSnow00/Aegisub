@@ -227,12 +227,7 @@ void DialogAttachments::OnExtract(wxCommandEvent &) {
 				msg += to_wx(agi::format("... (%d more)\n", static_cast<int>(renamed.size() - max_lines)));
 
 			wxMessageDialog dlg(&d, msg, _("Unsafe filenames"), wxOK | wxCANCEL | wxICON_WARNING);
-#if wxCHECK_VERSION(3, 3, 0)
 			dlg.SetOKLabel(_("Extract"));
-			dlg.SetCancelLabel(_("Cancel"));
-#else
-			dlg.SetOKCancelLabels(_("Extract"), _("Cancel"));
-#endif
 			if (dlg.ShowModal() != wxID_OK) return;
 		}
 	}
