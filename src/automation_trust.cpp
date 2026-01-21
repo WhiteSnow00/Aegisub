@@ -1,18 +1,14 @@
 #include "automation_trust.h"
 
-#include <boost/algorithm/string.hpp>
-
-#include <vector>
+#include <libaegisub/split.h>
 
 namespace automation_trust {
 std::set<std::string> ParseTrustedKeys(std::string_view raw) {
 	std::set<std::string> out;
-	std::vector<std::string> toks;
-	std::string s(raw);
-	boost::split(toks, s, boost::is_any_of("|"), boost::token_compress_off);
-	for (auto& tok : toks) {
-		boost::algorithm::trim(tok);
-		if (!tok.empty()) out.emplace(tok);
+	for (auto tok : agi::Split(raw, '|')) {
+		tok = agi::Trim(tok);
+		if (!tok.empty())
+			out.emplace(tok);
 	}
 	return out;
 }
