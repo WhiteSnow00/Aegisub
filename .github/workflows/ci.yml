@@ -98,10 +98,17 @@ jobs:
       - name: Install dependencies (Windows)
         if: matrix.config.os == 'windows-latest'
         run: |
-          choco install --no-progress --limit-output `
-            ninja --version=1.13.2 `
-            innosetup --version=6.7.0 `
-            7zip --version=25.1.0
+          choco --version
+
+          # Install each package separately so --version does not leak to others.
+          choco install --no-progress --limit-output ninja --version 1.13.2
+          choco install --no-progress --limit-output innosetup --version 6.7.0
+          choco install --no-progress --limit-output 7zip --version 25.1.0
+
+          ninja --version
+          7z i | Select-Object -First 20
+          $iscc = Get-Command iscc -ErrorAction SilentlyContinue
+          if ($null -ne $iscc) { $iscc | Format-List * } else { Write-Warning "iscc not found on PATH" }
 
           $moonscriptSha256 = "6C8A255A46A6805F5582FB03771A7289CB5BA79A83781F56EE5EE93D3EF489FC"
           $moonscripturl = "https://github.com/leafo/moonscript/releases/download/win32-v0.5.0/moonscript-187bac54ee5a7450013e9c38e005a0e671b76f45.zip"
